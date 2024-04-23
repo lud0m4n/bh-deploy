@@ -120,6 +120,8 @@ services:
       REST_SERVER_KAFKA_PASSWORD: ${REST_SERVER_KAFKA_PASSWORD}
       REST_SERVER_PROMETHEUS_HOST: ${REST_SERVER_PROMETHEUS_HOST}
       REST_SERVER_PROMETHEUS_PORT: ${REST_SERVER_PROMETHEUS_PORT}
+    volumes:
+      - ./bestHack_support_REST_server/logs:/app/logs
     ports:
       - "8081:8081"
       - "8082:8082"
@@ -128,7 +130,7 @@ services:
   grpc-server:
     container_name: grpc-server
     build:
-      context: ./bestHack_support_gRPC_server
+      context: /bestHack_support_gRPC_server
       args:
         GRPC_SERVER_LOGS_PATH_FILE: ${GRPC_SERVER_LOGS_PATH_FILE}
         GRPC_SERVER_ENV: ${GRPC_SERVER_ENV}
@@ -143,6 +145,8 @@ services:
         GRPC_SERVER_TIMEOUT: ${GRPC_SERVER_TIMEOUT}
     ports:
       - "44044:44044"
+    volumes:
+      - ./bestHack_support_gRPC_server/logs:/app/logs
     environment:
       GRPC_SERVER_LOGS_PATH_FILE: ${GRPC_SERVER_LOGS_PATH_FILE}
       GRPC_SERVER_ENV: ${GRPC_SERVER_ENV}
