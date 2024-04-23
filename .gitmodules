@@ -1,0 +1,12 @@
+[submodule "besthack-cluster"]
+	path = besthack-cluster
+	url = https://github.com/lud0m4n/besthack-cluster
+[submodule "bestHack_support_REST_server"]
+	path = bestHack_support_REST_server
+	url = https://github.com/markgregr/bestHack_support_REST_server
+[submodule "bestHack_support_gRPC_server"]
+	path = bestHack_support_gRPC_server
+	url = https://github.com/markgregr/bestHack_support_gRPC_server
+[submodule "TheBrawlers2.0"]
+	path = TheBrawlers2.0
+	url = https://github.com/CAPVOK/TheBrawlers2.0
