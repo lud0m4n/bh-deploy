@@ -170,12 +170,12 @@ services:
       context: ./TheBrawlers2.0
       args:
         VITE_SOCKET_WS_HOST: ${VITE_SOCKET_WS_HOST}
-        VITE_BASE_REST_URL: ${VITE_BASE_REST_URL}
+        VITE_REST_URL: ${VITE_REST_URL}
         VITE_APP_PORT: ${VITE_APP_PORT}
     ports:
       - "5173:5173"
     environment:
       VITE_SOCKET_WS_HOST: ${VITE_SOCKET_WS_HOST}
-      VITE_BASE_REST_URL: ${VITE_BASE_REST_URL}
+      VITE_REST_URL: ${VITE_REST_URL}
       VITE_APP_PORT: ${VITE_APP_PORT}
   
