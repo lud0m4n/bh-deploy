@@ -1,0 +1,177 @@
+volumes:
+  postgresdb_data:
+
+services:
+  postgres-grpc:
+    image: postgres:16-alpine
+    restart: always
+    container_name: postgres-grpc
+    environment:
+      - POSTGRES_USER=${GRPC_POSTGRES_USER}
+      - POSTGRES_PASSWORD=${GRPC_POSTGRES_PASSWORD}
+      - POSTGRES_DB=${GRPC_POSTGRES_DB}
+    volumes:
+      - postgresdb_data:/var/lib/postgresql/data
+
+  adminer:
+    image: adminer:latest
+    ports:
+      - "8888:8080"
+    depends_on:
+      - postgres-grpc
+
+  redis-grpc:
+    image: redis:latest
+
+    restart: always
+    ports:
+      - "6379:6379"
+    command: redis-server --save 20 1 --loglevel warning --requirepass besthack
+
+  # prometheus:
+  #   image: prom/prometheus:latest
+  #   volumes:
+  #     - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+  #   ports:
+  #   - "9091:9091"
+
+  # grafana:
+  #   image: grafana/grafana
+  #   ports:
+  #     - "3001:3001"
+  
+  # elasticsearch:
+  #   image: elasticsearch:7.17.0
+  #   container_name: elasticsearch
+  #   environment:
+  #     - discovery.type=single-node
+  #   ports:
+  #     - "9200:9200"
+
+  # filebeat:
+  #   container_name: filebeat
+  #   build:
+  #     context: ./filebeat
+  #   command: filebeat -e -strict.perms=false
+  #   volumes:
+  #     - ./FruitfulFriends-REST-API-server/logs:/src/logs-rest
+  #     - ./FruitfulFriends-gRPC-server/logs:/src/logs-grpc
+  #   depends_on:
+  #     - elasticsearch
+  #     - kibana # Добавлено для зависимости от Logstash
+
+  # logstash:
+  #   image: docker.elastic.co/logstash/logstash:7.17.0
+  #   ports:
+  #     - "5044:5044"
+  #   volumes:
+  #     - ./logstash/config/logstash.yml:/src/logstash/config/logstash.yml
+  #     - ./logstash/pipeline:/src/logstash/pipeline
+
+  #   depends_on:
+  #     - elasticsearch
+
+  # kibana:
+  #   image: kibana:7.17.0
+  #   container_name: kibana
+  #   ports:
+  #     - "5601:5601"
+  #   depends_on:
+  #     - elasticsearch
+
+  rest-server:
+    build:
+      context: ./bestHack_support_REST_server
+      args:
+        REST_SERVER_GRPC_CLIENT_ADDRESS: ${REST_SERVER_GRPC_CLIENT_ADDRESS}
+        REST_SERVER_GRPC_CLIENT_TIMEOUT: ${REST_SERVER_GRPC_CLIENT_TIMEOUT}
+        REST_SERVER_GRPC_CLIENT_RETRIES_COUNT: ${REST_SERVER_GRPC_CLIENT_RETRIES_COUNT}
+        REST_SERVER_GRPC_CLIENT_INSECURE: ${REST_SERVER_GRPC_CLIENT_INSECURE}
+        REST_SERVER_HOST: ${REST_SERVER_HOST}
+        REST_SERVER_PORT: ${REST_SERVER_PORT}
+        REST_SERVER_TIMEOUT: ${REST_SERVER_TIMEOUT}
+        REST_SERVER_IDLE_TIMEOUT: ${REST_SERVER_IDLE_TIMEOUT}
+        REST_SERVER_ALLOW_ORIGIN: ${REST_SERVER_ALLOW_ORIGIN}
+        REST_SERVER_APP_ID: ${REST_SERVER_APP_ID}
+        REST_SERVER_LOGS_PATH_FILE: ${REST_SERVER_LOGS_PATH_FILE}
+        REST_SERVER_KAFKA_BROKER: ${REST_SERVER_KAFKA_BROKER}
+        REST_SERVER_KAFKA_GROUP_ID: ${REST_SERVER_KAFKA_GROUP_ID}
+        REST_SERVER_KAFKA_TOPIC: ${REST_SERVER_KAFKA_TOPIC}
+        REST_SERVER_KAFKA_USERNAME: ${REST_SERVER_KAFKA_USERNAME}
+        REST_SERVER_KAFKA_PASSWORD: ${REST_SERVER_KAFKA_PASSWORD}
+        REST_SERVER_PROMETHEUS_HOST: ${REST_SERVER_PROMETHEUS_HOST}
+        REST_SERVER_PROMETHEUS_PORT: ${REST_SERVER_PROMETHEUS_PORT}
+    environment:
+      REST_SERVER_GRPC_CLIENT_ADDRESS: ${REST_SERVER_GRPC_CLIENT_ADDRESS}
+      REST_SERVER_GRPC_CLIENT_TIMEOUT: ${REST_SERVER_GRPC_CLIENT_TIMEOUT}
+      REST_SERVER_GRPC_CLIENT_RETRIES_COUNT: ${REST_SERVER_GRPC_CLIENT_RETRIES_COUNT}
+      REST_SERVER_GRPC_CLIENT_INSECURE: ${REST_SERVER_GRPC_CLIENT_INSECURE}
+      REST_SERVER_HOST: ${REST_SERVER_HOST}
+      REST_SERVER_PORT: ${REST_SERVER_PORT}
+      REST_SERVER_TIMEOUT: ${REST_SERVER_TIMEOUT}
+      REST_SERVER_IDLE_TIMEOUT: ${REST_SERVER_IDLE_TIMEOUT}
+      REST_SERVER_ALLOW_ORIGIN: ${REST_SERVER_ALLOW_ORIGIN}
+      REST_SERVER_APP_ID: ${REST_SERVER_APP_ID}
+      REST_SERVER_LOGS_PATH_FILE: ${REST_SERVER_LOGS_PATH_FILE}
+      REST_SERVER_KAFKA_BROKER: ${REST_SERVER_KAFKA_BROKER}
+      REST_SERVER_KAFKA_GROUP_ID: ${REST_SERVER_KAFKA_GROUP_ID}
+      REST_SERVER_KAFKA_TOPIC: ${REST_SERVER_KAFKA_TOPIC}
+      REST_SERVER_KAFKA_USERNAME: ${REST_SERVER_KAFKA_USERNAME}
+      REST_SERVER_KAFKA_PASSWORD: ${REST_SERVER_KAFKA_PASSWORD}
+      REST_SERVER_PROMETHEUS_HOST: ${REST_SERVER_PROMETHEUS_HOST}
+      REST_SERVER_PROMETHEUS_PORT: ${REST_SERVER_PROMETHEUS_PORT}
+    ports:
+      - "8081:8081"
+      - "8082:8082"
+    restart: always
+
+  grpc-server:
+    container_name: grpc-server
+    build:
+      context: ./bestHack_support_gRPC_server
+      args:
+        GRPC_SERVER_LOGS_PATH_FILE: ${GRPC_SERVER_LOGS_PATH_FILE}
+        GRPC_SERVER_ENV: ${GRPC_SERVER_ENV}
+        GRPC_SERVER_POSTGRES_URL: ${GRPC_SERVER_POSTGRES_URL}
+        GRPC_SERVER_POSTGRES_AUTO_MIGRATE: ${GRPC_SERVER_POSTGRES_AUTO_MIGRATE}
+        GRPC_SERVER_REDIS_ENDPOINT: ${GRPC_SERVER_REDIS_ENDPOINT}
+        GRPC_SERVER_REDIS_PASSWORD: ${GRPC_SERVER_REDIS_PASSWORD}
+        GRPC_SERVER_TOKEN_TTL: ${GRPC_SERVER_TOKEN_TTL}
+        GRPC_SERVER_JWT_SECRET: ${GRPC_SERVER_JWT_SECRET}
+        GRPC_SERVER_HOST: ${GRPC_SERVER_HOST}
+        GRPC_SERVER_PORT: ${GRPC_SERVER_PORT}
+        GRPC_SERVER_TIMEOUT: ${GRPC_SERVER_TIMEOUT}
+    ports:
+      - "44044:44044"
+    environment:
+      GRPC_SERVER_LOGS_PATH_FILE: ${GRPC_SERVER_LOGS_PATH_FILE}
+      GRPC_SERVER_ENV: ${GRPC_SERVER_ENV}
+      GRPC_SERVER_POSTGRES_URL: ${GRPC_SERVER_POSTGRES_URL}
+      GRPC_SERVER_POSTGRES_AUTO_MIGRATE: ${GRPC_SERVER_POSTGRES_AUTO_MIGRATE}
+      GRPC_SERVER_REDIS_ENDPOINT: ${GRPC_SERVER_REDIS_ENDPOINT}
+      GRPC_SERVER_REDIS_PASSWORD: ${GRPC_SERVER_REDIS_PASSWORD}
+      GRPC_SERVER_TOKEN_TTL: ${GRPC_SERVER_TOKEN_TTL}
+      GRPC_SERVER_JWT_SECRET: ${GRPC_SERVER_JWT_SECRET}
+      GRPC_SERVER_HOST: ${GRPC_SERVER_HOST}
+      GRPC_SERVER_PORT: ${GRPC_SERVER_PORT}
+      GRPC_SERVER_TIMEOUT: ${GRPC_SERVER_TIMEOUT}  
+
+    restart: always
+    depends_on:
+      - postgres-grpc
+      - redis-grpc
+  
+  brawlers-front:
+    build:
+      context: ./TheBrawlers2.0
+      args:
+        VITE_SOCKET_WS_HOST: ${VITE_SOCKET_WS_HOST}
+        VITE_BASE_REST_URL: ${VITE_BASE_REST_URL}
+        VITE_APP_PORT: ${VITE_APP_PORT}
+    ports:
+      - "5173:5173"
+    environment:
+      VITE_SOCKET_WS_HOST: ${VITE_SOCKET_WS_HOST}
+      VITE_BASE_REST_URL: ${VITE_BASE_REST_URL}
+      VITE_APP_PORT: ${VITE_APP_PORT}
+  
