@@ -179,3 +179,36 @@ services:
       VITE_REST_URL: ${VITE_REST_URL}
       VITE_APP_PORT: ${VITE_APP_PORT}
   
+  python-cluster:
+    container_name: py-cluster
+    build:
+      context: ./besthack-cluster
+      args:
+        PY_REST_URL: ${PY_REST_URL}
+        PY_PORT: ${PY_PORT}
+        PY_HOST: ${PY_HOST}
+    ports:
+      - "5000:5000"
+    environment:
+      PY_REST_URL: ${PY_REST_URL}
+      PY_PORT: ${PY_PORT}
+      PY_HOST: ${PY_HOST}
+    volumes:
+      - ./data:/app/data
+
+  python-cluster-chart:
+    container_name: py-cluster-chart
+    build:
+      context: ./cluster_chart
+      args:
+        PY_CHART_PORT: ${PY_CHART_PORT}
+        PY_CHART_HOST: ${PY_CHART_HOST}
+    ports:
+      - "3001:3001"
+    environment:
+      PY_CHART_PORT: ${PY_CHART_PORT}
+      PY_CHART_HOST: ${PY_CHART_HOST}
+    volumes:
+      - ./data:/app/data
+
+  
