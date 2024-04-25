@@ -125,13 +125,11 @@ services:
     build:
       context: ./besthack-cluster
       args:
-        PY_REST_URL: ${PY_REST_URL}
         PY_PORT: ${PY_PORT}
         PY_HOST: ${PY_HOST}
     ports:
       - "5000:5000"
     environment:
-      PY_REST_URL: ${PY_REST_URL}
       PY_PORT: ${PY_PORT}
       PY_HOST: ${PY_HOST}
     volumes:
