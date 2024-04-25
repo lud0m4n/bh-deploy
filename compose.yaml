@@ -28,57 +28,6 @@ services:
       - "6379:6379"
     command: redis-server --save 20 1 --loglevel warning --requirepass besthack
 
-  # prometheus:
-  #   image: prom/prometheus:latest
-  #   volumes:
-  #     - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-  #   ports:
-  #   - "9091:9091"
-
-  # grafana:
-  #   image: grafana/grafana
-  #   ports:
-  #     - "3001:3001"
-  
-  # elasticsearch:
-  #   image: elasticsearch:7.17.0
-  #   container_name: elasticsearch
-  #   environment:
-  #     - discovery.type=single-node
-  #   ports:
-  #     - "9200:9200"
-
-  # filebeat:
-  #   container_name: filebeat
-  #   build:
-  #     context: ./filebeat
-  #   command: filebeat -e -strict.perms=false
-  #   volumes:
-  #     - ./FruitfulFriends-REST-API-server/logs:/src/logs-rest
-  #     - ./FruitfulFriends-gRPC-server/logs:/src/logs-grpc
-  #   depends_on:
-  #     - elasticsearch
-  #     - kibana # Добавлено для зависимости от Logstash
-
-  # logstash:
-  #   image: docker.elastic.co/logstash/logstash:7.17.0
-  #   ports:
-  #     - "5044:5044"
-  #   volumes:
-  #     - ./logstash/config/logstash.yml:/src/logstash/config/logstash.yml
-  #     - ./logstash/pipeline:/src/logstash/pipeline
-
-  #   depends_on:
-  #     - elasticsearch
-
-  # kibana:
-  #   image: kibana:7.17.0
-  #   container_name: kibana
-  #   ports:
-  #     - "5601:5601"
-  #   depends_on:
-  #     - elasticsearch
-
   rest-server:
     build:
       context: ./bestHack_support_REST_server
@@ -89,16 +38,12 @@ services:
         REST_SERVER_GRPC_CLIENT_INSECURE: ${REST_SERVER_GRPC_CLIENT_INSECURE}
         REST_SERVER_HOST: ${REST_SERVER_HOST}
         REST_SERVER_PORT: ${REST_SERVER_PORT}
+        REST_SERVER_ANALYTICS_URL: ${REST_SERVER_ANALYTICS_URL}
         REST_SERVER_TIMEOUT: ${REST_SERVER_TIMEOUT}
         REST_SERVER_IDLE_TIMEOUT: ${REST_SERVER_IDLE_TIMEOUT}
         REST_SERVER_ALLOW_ORIGIN: ${REST_SERVER_ALLOW_ORIGIN}
         REST_SERVER_APP_ID: ${REST_SERVER_APP_ID}
         REST_SERVER_LOGS_PATH_FILE: ${REST_SERVER_LOGS_PATH_FILE}
-        REST_SERVER_KAFKA_BROKER: ${REST_SERVER_KAFKA_BROKER}
-        REST_SERVER_KAFKA_GROUP_ID: ${REST_SERVER_KAFKA_GROUP_ID}
-        REST_SERVER_KAFKA_TOPIC: ${REST_SERVER_KAFKA_TOPIC}
-        REST_SERVER_KAFKA_USERNAME: ${REST_SERVER_KAFKA_USERNAME}
-        REST_SERVER_KAFKA_PASSWORD: ${REST_SERVER_KAFKA_PASSWORD}
         REST_SERVER_PROMETHEUS_HOST: ${REST_SERVER_PROMETHEUS_HOST}
         REST_SERVER_PROMETHEUS_PORT: ${REST_SERVER_PROMETHEUS_PORT}
     environment:
@@ -108,16 +53,12 @@ services:
       REST_SERVER_GRPC_CLIENT_INSECURE: ${REST_SERVER_GRPC_CLIENT_INSECURE}
       REST_SERVER_HOST: ${REST_SERVER_HOST}
       REST_SERVER_PORT: ${REST_SERVER_PORT}
+      REST_SERVER_ANALYTICS_URL: ${REST_SERVER_ANALYTICS_URL}
       REST_SERVER_TIMEOUT: ${REST_SERVER_TIMEOUT}
       REST_SERVER_IDLE_TIMEOUT: ${REST_SERVER_IDLE_TIMEOUT}
       REST_SERVER_ALLOW_ORIGIN: ${REST_SERVER_ALLOW_ORIGIN}
       REST_SERVER_APP_ID: ${REST_SERVER_APP_ID}
       REST_SERVER_LOGS_PATH_FILE: ${REST_SERVER_LOGS_PATH_FILE}
-      REST_SERVER_KAFKA_BROKER: ${REST_SERVER_KAFKA_BROKER}
-      REST_SERVER_KAFKA_GROUP_ID: ${REST_SERVER_KAFKA_GROUP_ID}
-      REST_SERVER_KAFKA_TOPIC: ${REST_SERVER_KAFKA_TOPIC}
-      REST_SERVER_KAFKA_USERNAME: ${REST_SERVER_KAFKA_USERNAME}
-      REST_SERVER_KAFKA_PASSWORD: ${REST_SERVER_KAFKA_PASSWORD}
       REST_SERVER_PROMETHEUS_HOST: ${REST_SERVER_PROMETHEUS_HOST}
       REST_SERVER_PROMETHEUS_PORT: ${REST_SERVER_PROMETHEUS_PORT}
     volumes:
