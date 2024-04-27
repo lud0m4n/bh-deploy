@@ -10,3 +10,6 @@
 [submodule "TheBrawlers2.0"]
 	path = TheBrawlers2.0
 	url = https://github.com/CAPVOK/TheBrawlers2.0
+[submodule "bh-bot"]
+	path = bh-bot
+	url = https://github.com/lud0m4n/bh-bot.git

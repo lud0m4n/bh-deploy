@@ -155,5 +155,16 @@ services:
       PY_CHART_HOST: ${PY_CHART_HOST}
     volumes:
       - ./data:/app/data
+  
+  python-bot:
+    container_name: py-bot
+    build:
+      context: ./bh-bot
+      args:
+        API_TOKEN: ${API_TOKEN}
+    ports:
+      - "3002:3002"
+    environment:
+      API_TOKEN: ${API_TOKEN}
 
   
