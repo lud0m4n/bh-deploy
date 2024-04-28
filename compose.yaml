@@ -106,6 +106,7 @@ services:
       GRPC_SERVER_TIMEOUT: ${GRPC_SERVER_TIMEOUT} 
       GRPC_SERVER_INPUT_FILE: ${GRPC_SERVER_INPUT_FILE}
       GRPC_SERVER_OUTPUT_FILE: ${GRPC_SERVER_OUTPUT_FILE} 
+      GRPC_SERVER_ANALYTICS_SERVICE_URL: ${GRPC_SERVER_ANALYTICS_SERVICE_URL}
 
     restart: always
     depends_on:
@@ -162,9 +163,13 @@ services:
       context: ./bh-bot
       args:
         API_TOKEN: ${API_TOKEN}
+        BOT_PORT: ${BOT_PORT}
+        REST_HOST: ${REST_HOST}
     ports:
       - "3002:3002"
     environment:
       API_TOKEN: ${API_TOKEN}
+      BOT_PORT: ${BOT_PORT}
+      REST_HOST: ${REST_HOST}
 
   
