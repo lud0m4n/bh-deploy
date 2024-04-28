@@ -39,7 +39,12 @@ dash_app.layout = html.Div(children=[
     html.Div(children='''
         Dash: A web application framework for your data.
     '''),
-    
+    dcc.Interval(
+        id='interval-component',
+        interval=1*300000,  # in milliseconds
+        n_intervals=0
+    ),
+
     dcc.Graph(
         id='elbow-method-graph',
         figure=fig_elbow,
