@@ -22,8 +22,8 @@ fig_clusters = px.bar(cluster_counts, x='cluster', y='count', title='Frequency o
 fig_tsne = px.scatter(tsne_data, x='t-SNE Feature 1', y='t-SNE Feature 2', color='cluster', title='t-SNE Visualization of Message Embeddings')
 fig_avg_duration = px.bar(time_data, x='ClusterIndex', y='AvgDuration', title='Average Duration by Cluster')
 fig_avg_reaction = px.bar(time_data, x='ClusterIndex', y='AvgReaction', title='Average Reaction by Cluster')
-fig_median_duration = px.histogram(time_data, x='ClusterIndex', y='MedianDuration', title='Histogram of Median Durations by Cluster')
-fig_median_reaction = px.histogram(time_data, x='ClusterIndex', y='MedianReaction', title='Histogram of Median Reactions by Cluster')
+fig_median_duration = px.bar(time_data, x='ClusterIndex', y='MedianDuration', title='Histogram of Median Durations by Cluster')
+fig_median_reaction = px.bar(time_data, x='ClusterIndex', y='MedianReaction', title='Histogram of Median Reactions by Cluster')
 
 graph_style = {
     'width': '30%',        
